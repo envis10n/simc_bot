@@ -10,7 +10,7 @@ export interface ISimCArmory {
 export function armory_from_string(inp: string): ISimCArmory {
   const i = inp.split(',').map((v) => v.toLowerCase());
   if (i.length != 2) throw new Error('Invalid parameter count. Example: realmname,character');
-  const i2 = i[0].replace(/ /g, '');
+  const i2 = i[0].replace(/ /g, '-');
   const i3 = i[1];
   return {
     realm: i2,
