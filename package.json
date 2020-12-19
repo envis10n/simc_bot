@@ -4,6 +4,8 @@
   "description": "Discord bot for running WoW DPS simulations.",
   "main": "build/index.js",
   "scripts": {
+    "start": "npm run build && node .",
+    "build": "npx tsc",
     "test": "jest ."
   },
   "repository": {
@@ -39,5 +41,9 @@
       "tsx",
       "js"
     ]
+  },
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
   }
 }
