@@ -28,19 +28,14 @@ export async function simc(inp: string): Promise<string> {
       const arm = armory_from_string(inp);
       const url = `us_${arm.realm}_${arm.name}.html`;
       const filename = _p.resolve(SIMC_SAVE_PATH, url);
-      execFile(
-        SIMC_PATH,
-        [`armory=${string_from_armory(arm)}`, `html=${filename}`, 'calculate_scale_factors=1'],
-        null,
-        (err, stdout, stderr) => {
-          if (err != undefined) reject(err);
-          else {
-            if (stderr instanceof Buffer) stderr = stderr.toString();
-            if (stderr.length != 0) reject(new Error(stderr));
-            else resolve(url);
-          }
-        },
-      );
+      execFile(SIMC_PATH, [`armory=${string_from_armory(arm)}`, `html=${filename}`], null, (err, stdout, stderr) => {
+        if (err != undefined) reject(err);
+        else {
+          if (stderr instanceof Buffer) stderr = stderr.toString();
+          if (stderr.length != 0) reject(new Error(stderr));
+          else resolve(url);
+        }
+      });
     } catch (e) {
       reject(e);
     }
