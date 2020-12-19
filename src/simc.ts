@@ -26,8 +26,7 @@ export async function simc(inp: string): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       const arm = armory_from_string(inp);
-      const ts = Date.now();
-      const url = `${ts}_us_${arm.realm}_${arm.name}.html`;
+      const url = `us_${arm.realm}_${arm.name}.html`;
       const filename = _p.resolve(SIMC_SAVE_PATH, url);
       execFile(SIMC_PATH, [`armory=${string_from_armory(arm)}`, `html=${filename}`], null, (err, stdout, stderr) => {
         if (err != undefined) reject(err);
