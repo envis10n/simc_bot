@@ -25,17 +25,26 @@ export function string_from_armory(arm: ISimCArmory): string {
 export async function simc(inp: string): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
-      const arm = armory_from_string(inp);
-      const url = `us_${arm.realm}_${arm.name}.html`;
-      const filename = _p.resolve(SIMC_SAVE_PATH, url);
-      execFile(SIMC_PATH, [`armory=${string_from_armory(arm)}`, `html=${filename}`], null, (err, stdout, stderr) => {
-        if (err != undefined) reject(err);
-        else {
-          if (stderr instanceof Buffer) stderr = stderr.toString();
-          if (stderr.length != 0) reject(new Error(stderr));
-          else resolve(url);
-        }
-      });
+      const match = /\barmory=(.*)\b/g.exec(inp);
+      if (match != null) {
+        const armstr: string = match[1];
+        const file: string = `${armstr.replace(/,/g, '_')}.html`;
+        const filename = _p.resolve(SIMC_SAVE_PATH, file);
+        const script = inp
+          .replace(/\bhtml=.*\b/g, `html=${filename}`)
+          .replace(/\s/g, ' ')
+          .replace(/\bcalculate_scale_factors=1\b/g, '');
+        const args = script.trim().split(' ');
+        if (!/\bhtml=.*\b/g.test(script)) args.push(`html=${filename}`);
+        execFile(SIMC_PATH, args, null, (err, stdout, stderr) => {
+          if (err != undefined) reject(err);
+          else {
+            if (stderr instanceof Buffer) stderr = stderr.toString();
+            if (stderr.length != 0) reject(new Error(stderr));
+            else resolve(file);
+          }
+        });
+      }
     } catch (e) {
       reject(e);
     }
